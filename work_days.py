@@ -1,3 +1,4 @@
+import sys
 import datetime
 
 # List of holidays to exclude from workdays calculation
@@ -12,8 +13,10 @@ def workdays_between_dates(start_date, end_date):
             weekdays += 1
     return weekdays
 
-# Example usage
-start_date = datetime.date(2023, 3, 1)
-end_date = datetime.date(2023, 4, 30)
-workdays = workdays_between_dates(start_date, end_date)
-print(f"Number of workdays between {start_date} and {end_date}: {workdays}")
+if len(sys.argv) == 3:
+    start_date = datetime.datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
+    end_date = datetime.datetime.strptime(sys.argv[2], "%Y-%m-%d").date()
+    workdays = workdays_between_dates(start_date, end_date)
+    print(f"Number of workdays between {start_date} and {end_date}: {workdays}")
+else:
+    print("Please provide start_date and end_date as command-line arguments.")
