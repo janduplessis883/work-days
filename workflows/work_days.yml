@@ -30,14 +30,14 @@ jobs:
         with:
           filename: result.txt
           content: ${{ steps.save.outputs.result }}
-          description: 'Workdays Calculation Result'
+          description: '🧡 Workdays Calculation Result'
           public: true
-          token: ${{ secrets.GIST_TOKEN }}
+          token: ${{ secrets.MY_GIST_TOKEN }}
 
       - name: Post Gist URL as repository_dispatch
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.GIST_TOKEN }}
+          token: ${{ secrets.MY_GIST_TOKEN }}
           repository: ${{ github.event.sender.login }}/your-callback-repo
           event-type: workdays-result
           client-payload: '{"gist_url": "${{ steps.create_gist.outputs.url }}"}'
