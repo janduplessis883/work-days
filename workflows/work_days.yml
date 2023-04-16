@@ -20,5 +20,25 @@ jobs:
         run: |
           python -m pip install --upgrade pip
 
-      - name: Run work_days.py script
-        run: python work_days.py
+      - name: Run work_days.py script and save the result
+        run: |
+          python work_days.py ${{ github.event.client_payload.start_date }} ${{ github.event.client_payload.end_date }} > result.txt
+
+      - name: Create Gist
+        id: create_gist
+        uses: gists/action@v1
+        with:
+          filename: result.txt
+          content: ${{ steps.save.outputs.result }}
+          description: 'Workdays Calculation Result'
+          public: true
+          token: ${{ secrets.GIST_TOKEN }}
+
+      - name: Post Gist URL as repository_dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          repository: ${{ github.event.sender.login }}/your-callback-repo
+          event-type: workdays-result
+          client-payload: '{"gist_url": "${{ steps.create_gist.outputs.url }}"}'
+
